@@ -1,0 +1,29 @@
+<html lang="ja"><head><title>Calc Memory Limit</title>
+    <script type="text/javascript">
+    var count = 0;		// 1MByte の文字列をいくつ所持しているか
+    var globalVar = [];	// 1MByte の文字列を格納する先
+    function getRandomInt(min,max) {return Math.floor(Math.random() * Math.floor(max-min)+min);}
+    function id(name) { return document.getElementById(name); }
+    function calc() {
+        try {
+            let genBuffer = "";
+            for ( i = 0 ; i < ( 1024 * 1024) / 16  ; i++ ) {
+                genBuffer += getRandomInt(12345678, 99999999).toString();
+            }
+            globalVar[count] = genBuffer;	// 1MByte の文字列を格納
+            count++;						// カウントアップ
+            id("addmemorysize").innerHTML = genBuffer.length * 2;
+            id("memorysize").innerHTML = (genBuffer.length * count * 2);
+            setTimeout(calc, 10);			// 1msec で再呼び出し
+        } catch ( e ) {	// out of memory 例外がキャッチできるかの確認
+            console.error("name=" + e.name + ", message=" + e.message );
+        }
+    }
+    </script>
+    </head>
+    <body><h1>Calc Memory Limit:</h1><div>
+        <input type="button" value="Start Calc" onclick="calc()"><br />
+        Buffer Unit Length: <span id="addmemorysize">0</span>Bytes / 10msec<br />
+         Used Buffer Length: <span id="memorysize">0</span>Bytes
+    </div></body></html>
+    
